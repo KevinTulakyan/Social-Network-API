@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const dateFormat = require('../utils/dateFormat');
 
 const PizzaSchema = new Schema(
     {
@@ -14,24 +15,23 @@ const PizzaSchema = new Schema(
         required: true,
         match: [/.+@.+\..+/, 'Please enter a valid e-mail address']
       },
-      thoughts: {
+      createdAt: {
         type: Date,
         default: Date.now,
         get: createdAtVal => dateFormat(createdAtVal)
       },
-      size: {
-        type: String,
-        required: true,
-        enum: ['Personal', 'Small', 'Medium', 'Large', 'Extra Large'],
-        default: 'Large'
-      },
-      toppings: [],
-      comments: [
+      thoughts:[
         {
           type: Schema.Types.ObjectId,
-          ref: 'Comment'
+          ref: 'Thought'
         }
-      ]
+      ],
+      friends: [
+        {
+          type: Schema.Types.ObjectId,
+          ref: 'User'
+        }
+      ],
     },
     {
       toJSON: {
@@ -42,3 +42,9 @@ const PizzaSchema = new Schema(
       id: false
     }
   );
+
+  PizzaSchema.virtual('friendCount').get(function() {
+    return this.friends.length
+  });
+
+module.exports = User;
