@@ -3,7 +3,6 @@ const { User } = require('../models');
 const userController = {
   getAllUser(req, res) {
     User.find({})
-      
       .then(dbUser => res.json(dbUser))
       .catch(err => {
         console.log(err);
@@ -12,7 +11,7 @@ const userController = {
   },
 
   getUserById({ params }, res) {
-    User.findOne({ _id: params.id })
+    User.findOne({ _id: params.Id })
       .populate({path: 'Thoughts', select: '-__v'})
       .populate({path: 'Freinds', select: '-__v'})
       .select('-__v')
@@ -36,7 +35,7 @@ const userController = {
   },
 
   updateUser({ params, body }, res) {
-    User.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
+    User.findOneAndUpdate({ _id: params.Id }, body, { new: true, runValidators: true })
       .then(dbUser => {
         if (!dbUser) {
           res.status(404).json({ message: 'No User found with this id!' });
@@ -48,7 +47,7 @@ const userController = {
   },
 
   deleteUser({ params }, res) {
-    User.findOneAndDelete({ _id: params.id })
+    User.findOneAndDelete({ _id: params.Id })
       .then(dbUser => res.json(dbUser))
       .catch(err => res.json(err));
   },
