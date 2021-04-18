@@ -1,7 +1,6 @@
 const { Schema, model } = require('mongoose');
-const dateFormat = require('../utils/dateFormat');
 
-const PizzaSchema = new Schema(
+const UserSchema = new Schema(
     {
       userName: {
         type: String,
@@ -14,11 +13,6 @@ const PizzaSchema = new Schema(
         unique: true,
         required: true,
         match: [/.+@.+\..+/, 'Please enter a valid e-mail address']
-      },
-      createdAt: {
-        type: Date,
-        default: Date.now,
-        get: createdAtVal => dateFormat(createdAtVal)
       },
       thoughts:[
         {
@@ -35,16 +29,16 @@ const PizzaSchema = new Schema(
     },
     {
       toJSON: {
-        virtuals: true,
-        getters: true
+        virtuals: true
       },
-      // prevents virtuals from creating duplicate of _id as `id`
       id: false
     }
   );
 
-  PizzaSchema.virtual('friendCount').get(function() {
+UserSchema.virtual('friendCount').get(function() {
     return this.friends.length
-  });
+});
+
+const User = model('User', UserSchema);
 
 module.exports = User;
